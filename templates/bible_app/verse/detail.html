@@ -3,6 +3,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/bible_styles.css' %}">
+<link rel="stylesheet" href="{% static 'css/tooltip.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -17,9 +18,21 @@
             </div>
             <div class="text-section portuguese-text">
                 <h6 class="text-muted">Tradução em Português:</h6>
-                <p>{{ verse.portuguese_text }}</p>
+                <p>{{ verse.processed_portuguese_text|safe }}</p>
             </div>
-            <div class="text-end">
+            {% if verse.translator_note %}
+            <div class="translator-note mt-3">
+                <h6 class="text-muted">Nota do Tradutor:</h6>
+                <p>{{ verse.translator_note }}</p>
+            </div>
+            {% endif %}
+            <div class="verse-metadata mt-3">
+                <small class="text-muted">
+                    Fonte: {{ verse.get_aramaic_source_display }} | 
+                    Tradutor: {{ verse.get_translator_display }}
+                </small>
+            </div>
+            <div class="text-end mt-3">
                 <a href="{% url 'bible_app:edit_verse' verse.id %}" class="btn btn-primary">
                     Editar
                 </a>
@@ -30,4 +43,8 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/tooltip.js' %}"></script>
 {% endblock %}

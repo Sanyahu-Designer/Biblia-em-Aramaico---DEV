@@ -1,0 +1,50 @@
+/* Estilos para tooltips de tradução */
+.tooltip-word {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-decoration-color: #4682b4;
+    cursor: help;
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip-word:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 12px;
+    background-color: #4682b4;
+    color: white;
+    border-radius: 4px;
+    font-size: 14px;
+    white-space: nowrap;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.tooltip-word:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #4682b4;
+    margin-bottom: -12px;
+}
+
+/* Animação suave para o tooltip */
+.tooltip-word::after,
+.tooltip-word::before {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+}
+
+.tooltip-word:hover::after,
+.tooltip-word:hover::before {
+    opacity: 1;
+    visibility: visible;
+}
