@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/bible_styles.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>{{ verse.chapter.book.name }} {{ verse.chapter.number }}:{{ verse.number }}</h1>
+    
+    <div class="card verse-card">
+        <div class="verse-content">
+            <div class="text-section aramaic-text">
+                <h6 class="text-muted">Texto em Aramaico:</h6>
+                <p class="hebrew-font">{{ verse.aramaic_text }}</p>
+            </div>
+            <div class="text-section portuguese-text">
+                <h6 class="text-muted">Tradução em Português:</h6>
+                <p>{{ verse.portuguese_text }}</p>
+            </div>
+            <div class="text-end">
+                <a href="{% url 'bible_app:edit_verse' verse.id %}" class="btn btn-primary">
+                    Editar
+                </a>
+                <a href="{% url 'bible_app:chapter_verses' verse.chapter.id %}" class="btn btn-secondary">
+                    Voltar para Capítulo
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
