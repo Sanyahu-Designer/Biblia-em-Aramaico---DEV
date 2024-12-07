@@ -56,7 +56,9 @@ class TextProcessor:
             
             if termo_limpo in self.traducoes:
                 traducao = self.traducoes[termo_limpo]
-                resultado.append(f'<span class="tooltip-word" data-tooltip="{traducao}">{palavra}</span>')
+                resultado.append(
+                    f'<span class="tooltip-word" data-tooltip="{escape(traducao)}">{palavra}</span>'
+                )
             else:
                 resultado.append(palavra)
         
