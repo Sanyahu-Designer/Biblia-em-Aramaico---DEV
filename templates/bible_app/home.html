@@ -27,6 +27,10 @@
         color: #495057;
         margin-bottom: 0.5rem;
     }
+    .portuguese-text p {
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
 </style>
 {% endblock %}
 
@@ -71,11 +75,11 @@
                 <div class="verse-content">
                     <div class="text-section">
                         <h3 class="h6 text-muted"><strong><em>Texto em Aramaico:</em></strong></h3>
-                        <p class="aramaic-text" lang="arc">{{ verse.aramaic_text }}</p>
+                        <p class="aramaic-text" lang="arc" dir="rtl">{{ verse.aramaic_text }}</p>
                     </div>
-                    <div class="text-section">
+                    <div class="text-section portuguese-text">
                         <h3 class="h6 text-muted"><strong><em>Tradução em Português:</em></strong></h3>
-                        <p lang="pt-BR">{{ verse.processed_portuguese_text|safe }}</p>
+                        <div lang="pt-BR">{{ verse.processed_portuguese_text|safe }}</div>
                     </div>
                     {% if verse.translator_note %}
                     <div class="translator-note">

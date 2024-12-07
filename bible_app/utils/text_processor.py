@@ -43,19 +43,23 @@ class TextProcessor:
         # Escape HTML first
         texto = escape(texto)
         
-        # Split text into words while preserving punctuation
-        palavras = re.findall(r'\b\w+\b|[^\w\s]', texto)
+        # Split text into words while preserving spaces and punctuation
+        palavras = re.findall(r'\S+|\s+', texto)
         resultado = []
         
         for palavra in palavras:
+            if palavra.isspace():
+                resultado.append(palavra)
+                continue
+                
             termo_limpo = palavra.strip('.,!?:;').lower()
             
             if termo_limpo in self.traducoes:
                 traducao = self.traducoes[termo_limpo]
-                resultado.append(f'<span class="tooltip" data-tooltip="{traducao}">{palavra}</span>')
+                resultado.append(f'<span class="tooltip-word" data-tooltip="{traducao}">{palavra}</span>')
             else:
                 resultado.append(palavra)
         
-        return ' '.join(resultado)
+        return ''.join(resultado)
 
 text_processor = TextProcessor()
