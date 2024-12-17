@@ -24,7 +24,7 @@ AddCharset UTF-8 .html .css .js .xml .json .txt
 </IfModule>
 
 # Serve favicon.ico from static directory
-Alias /favicon.ico /home/project/staticfiles/favicon.ico
+Alias /favicon.ico /home/netsarim/staging/staticfiles/favicon.ico
 
 # Serve static files
 <Directory /home/project/staticfiles>

@@ -1,6 +1,5 @@
 """Model for Bible verses with automatic tooltip processing."""
 from django.db import models
-from django.core.cache import cache
 from ..utils.text_processor import text_processor
 
 class Verse(models.Model):
@@ -37,23 +36,4 @@ class Verse(models.Model):
     @property
     def processed_portuguese_text(self):
         """Get text with tooltips processed on demand."""
-        cache_key = f'verse_processed_text_{self.id}_{self.updated_at.timestamp()}'
-        cached_text = cache.get(cache_key)
-        
-        if cached_text is None:
-            try:
-                cached_text = text_processor.processar_tooltips(self.portuguese_text)
-                cache.set(cache_key, cached_text, 3600)  # Cache por 1 hora
-            except Exception as e:
-                # Em caso de erro, retorna o texto original sem processamento
-                cached_text = self.portuguese_text
-        
-        return cached_text
-
-    def save(self, *args, **kwargs):
-        """Override save to clear cache when verse is updated."""
-        # Limpa o cache do texto processado
-        cache_key = f'verse_processed_text_{self.id}_{self.updated_at.timestamp()}'
-        cache.delete(cache_key)
-        
-        super().save(*args, **kwargs)
+        return text_processor.processar_tooltips(self.portuguese_text)
