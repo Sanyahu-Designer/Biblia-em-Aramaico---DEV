@@ -208,4 +208,4 @@ JAZZMIN_UI_TWEAKS = {
         "danger": "btn-danger",
         "success": "btn-success"
     }
-}
+ }

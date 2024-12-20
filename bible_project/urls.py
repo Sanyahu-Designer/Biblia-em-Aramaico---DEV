@@ -13,6 +13,6 @@ urlpatterns = [
     path('admin/logout/', CustomLogoutView.as_view(), name='admin_logout'),
     path('admin/cache-monitor/', cache_dashboard, name='admin_cache_dashboard'),
     path('admin/', admin.site.urls),
-    path('', include('bible_app.urls', namespace='bible_app')),    
+    path('', include('bible_app.urls', namespace='bible_app')),
     path('dictionary/', include('dictionary_app.urls', namespace='dictionary_app')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

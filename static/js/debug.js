@@ -4,6 +4,7 @@ const debugLogger = {
         console.log('Debug initialized');
         this.checkFontLoading();
         this.checkAPIEndpoints();
+        this.checkAudioElements();
     },
 
     checkFontLoading() {
@@ -24,6 +25,19 @@ const debugLogger = {
         } else {
             console.error('Book select element not found');
         }
+    },
+    checkAudioElements() {
+        const audioElements = document.querySelectorAll('audio');
+        audioElements.forEach(audio => {
+            const src = audio.querySelector('source').getAttribute('src');
+            console.log('Audio element found with source:', src);
+            audio.addEventListener('error', (e) => {
+                console.error('Error loading audio:', src, e);
+            });
+            audio.addEventListener('loadeddata', () => {
+                console.log('Audio loaded successfully:', src);
+            });
+        });
     }
 };
 
