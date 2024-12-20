@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+    {% block content %}
+    <div class="container mt-4">
+        <h1>Dicionário Aramaico/Português</h1>    
+        {% if words %}
+            <ul class="list-group">
+                {% for word in words %}            
+                <li class="list-group-item">
+                    Aramaico Siríaco: <strong>{{ word.aramaic_word }}</strong>
+                    <br>
+                    Transliteração: {{ word.transliteration }}
+                    <br>
+                    Tradução: {{ word.portuguese_translation }}
+                    {% if word.pronunciation_audio %}
+                    <br>
+                    <audio controls>
+                        <source src="{{ word.pronunciation_audio.url }}">
+                        Seu navegador não suporta o elemento de áudio.
+                    </audio>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Nenhuma palavra encontrada.</p>
+        {% endif %}
+    </div>
+    {% endblock %}

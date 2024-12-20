@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bible_app.apps.BibleAppConfig',
+    'dictionary_app.apps.DictionaryAppConfig',
 ]
 
 MIDDLEWARE = [
