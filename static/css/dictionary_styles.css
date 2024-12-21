@@ -30,8 +30,19 @@ body[data-theme="dark"] .text-muted {
     color: #999 !important;
 }
 body[data-theme="dark"] input::placeholder {
-    color: #999 !important;
+    color: #ccc !important;
 }
 input::placeholder {
     color: #6c757d;
+}
+
+body[data-theme="dark"] .form-control {
+    background-color: #333;
+    color: #e0e0e0;
+    border-color: #555;
+}
+
+body[data-theme="dark"] .form-control:focus {
+    border-color: #66afe9;
+    box-shadow: 0 0 0 0.2rem rgba(102, 175, 233, 0.25);
 }

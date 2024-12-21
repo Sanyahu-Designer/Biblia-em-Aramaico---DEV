@@ -1,106 +1,131 @@
 {% extends 'base.html' %}
 
-    {% block content %}
-    <div class="container mt-4">
-        <h4>Dicionário Aramaico/Português</h4>
+{% block content %}
+<div class="container mt-4">
+    <h5>Dicionário Aramaico/Português</h5>
 
-        <div class="input-group mb-3">
-            <input type="text" id="search-input" class="form-control" placeholder="Pesquisar palavra..."
-                   onkeypress="handleKeyPress(event)">
-            <button class="btn btn-outline-secondary" type="button" onclick="searchWords()">
-                <i class="bi bi-search"></i>
-            </button>
-        </div>
+    <div class="input-group mb-3">
+        <input type="text" id="search-input" class="form-control" placeholder="Pesquisar palavra..."
+               onkeypress="handleKeyPress(event)">
+        <button class="btn btn-outline-secondary" type="button" onclick="searchWords()">
+            <i class="bi bi-search"></i>
+        </button>
+    </div>
 
-        {% if words %}
-            <div class="row" id="words-container">
-                {% for word in words %}
-                <div class="col-12 mb-3">
-                    <div class="card dictionary-card">
-                        <div class="card-body">
-                            <div class="row dictionary-row">
-                                <div class="col-4 dictionary-col border-end">
-                                    <span class="text-muted dictionary-title aramaico-title" style="font-size: 0.8rem;">Aramaico</span>
-                                    <p class="hebrew-font dictionary-text" style="font-size: 1.3em !important;" dir="rtl">{{ word.aramaic_word }}</p>
-                                </div>
-                                <div class="col-4 dictionary-col border-end">
-                                    <span class="text-muted dictionary-title transliteration-title" style="font-size: 0.8rem;">Transliteração</span>
-                                    <p class="dictionary-text" style="font-size: 1rem;">{{ word.transliteration }}</p>
-                                </div>
-                                <div class="col-4 dictionary-col">
-                                    <span class="text-muted dictionary-title translation-title" style="font-size: 0.8rem;">Tradução</span>
-                                    <p class="dictionary-text" style="font-size: 1rem;">{{ word.portuguese_translation }}</p>
-                                </div>
+    {% if words %}
+        <div class="row" id="words-container">
+            {% for word in words %}
+            <div class="col-12 mb-3">
+                <div class="card dictionary-card">
+                    <div class="card-body">
+                        <div class="row dictionary-row">
+                            <div class="col-4 dictionary-col border-end text-center">
+                                <span class="text-muted dictionary-title aramaico-title" style="font-size: 0.7rem;">Aramaico</span>
+                                <p class="hebrew-font dictionary-text text-center" style="font-size: 1.5em !important;" dir="rtl">{{ word.aramaic_word }}</p>
+                            </div>
+                            <div class="col-4 dictionary-col border-end text-center">
+                                <span class="text-muted dictionary-title transliteration-title" style="font-size: 0.7rem;">Transliteração</span>
+                                <p class="dictionary-text text-center" style="font-size: 1rem;">{{ word.transliteration }}</p>
+                            </div>
+                            <div class="col-4 dictionary-col text-center">
+                                <span class="text-muted dictionary-title translation-title" style="font-size: 0.7rem;">Tradução</span>
+                                <p class="dictionary-text text-center" style="font-size: 1rem;">{{ word.portuguese_translation }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                {% endfor %}
             </div>
+            {% endfor %}
+        </div>
 
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
-                    {% if page_obj.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    {% endif %}
+        <nav aria-label="Page navigation" style="margin-bottom: 20px;">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% endif %}
 
-                    {% for page_num in page_obj.paginator.page_range %}
-                    <li class="page-item {% if page_obj.number == page_num %}active{% endif %}">
-                        <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
-                    </li>
-                    {% endfor %}
+                {% for page_num in page_obj.paginator.page_range %}
+                <li class="page-item {% if page_obj.number == page_num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                </li>
+                {% endfor %}
 
-                    {% if page_obj.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </nav>
-        {% else %}
-            <p>Nenhuma palavra encontrada.</p>
-        {% endif %}
-    </div>
-    {% endblock %}
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% else %}
+        <p>Nenhuma palavra encontrada.</p>
+    {% endif %}
+</div>
+{% endblock %}
 
-    {% block extra_js %}
-    <script>
-        function searchWords() {
-            const input = document.getElementById('search-input');
-            const filter = input.value.toUpperCase();
-            const container = document.getElementById('words-container');
-            const cards = container.querySelectorAll('.dictionary-card');
-            
-            let found = false;
+{% block extra_js %}
+<script>
+    function normalizeText(text) {
+        return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+    }
 
-            cards.forEach(card => {
-                const aramaic = card.querySelector('.hebrew-font').textContent.toUpperCase();
-                const transliteration = card.querySelector('.dictionary-text:nth-child(2)').textContent.toUpperCase();
-                const translation = card.querySelector('.dictionary-text:nth-child(3)').textContent.toUpperCase();
+    function searchWords() {
+        const input = document.getElementById('search-input');
+        const filter = normalizeText(input.value);
+        const container = document.getElementById('words-container');
+        const cards = container.querySelectorAll('.dictionary-card');
 
-                if (aramaic.includes(filter) || transliteration.includes(filter) || translation.includes(filter)) {
-                    card.style.display = "";
-                    found = true;
-                } else {
-                    card.style.display = "none";
-                }
-            });
-            
-            if (!found) {
-                container.innerHTML = '<p>Nenhuma palavra encontrada.</p>';
+        let found = false;
+
+        cards.forEach(card => {
+            const aramaic = normalizeText(card.querySelector('.hebrew-font')?.textContent || "");
+            const transliteration = normalizeText(card.querySelector('.transliteration-title + p')?.textContent || "");
+            const translation = normalizeText(card.querySelector('.translation-title + p')?.textContent || "");
+
+            if (`${aramaic} ${transliteration} ${translation}`.includes(filter)) {
+                card.style.display = "";
+                found = true;
+            } else {
+                card.style.display = "none";
+            }
+        });
+
+        let noResultsMessage = document.getElementById('no-results-message');
+        if (!noResultsMessage) {
+            noResultsMessage = document.createElement('p');
+            noResultsMessage.id = 'no-results-message';
+            noResultsMessage.textContent = 'Nenhuma palavra encontrada.';
+            container.appendChild(noResultsMessage);
+        }
+        noResultsMessage.style.display = found ? "none" : "block";
+
+        let backButtonContainer = document.getElementById('back-button-container');
+        if (found) {
+            if (!backButtonContainer) {
+                backButtonContainer = document.createElement('div');
+                backButtonContainer.id = 'back-button-container';
+                backButtonContainer.style.textAlign = 'center';
+                backButtonContainer.style.marginBottom = '2rem';
+                container.appendChild(backButtonContainer);
+            }
+            backButtonContainer.innerHTML = '<button class="btn btn-secondary" style="margin-top: 20px;" onclick="window.location.href=\'{% url "dictionary_app:home" %}\'">Voltar</button>';
+        } else {
+            if (backButtonContainer) {
+                backButtonContainer.remove();
             }
         }
+    }
 
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                searchWords();
-            }
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            searchWords();
         }
-    </script>
-    {% endblock %}
+    }
+</script>
+{% endblock %}
