@@ -2,21 +2,105 @@
 
     {% block content %}
     <div class="container mt-4">
-        <h1>Dicionário Aramaico/Português</h1>
+        <h4>Dicionário Aramaico/Português</h4>
+
+        <div class="input-group mb-3">
+            <input type="text" id="search-input" class="form-control" placeholder="Pesquisar palavra..."
+                   onkeypress="handleKeyPress(event)">
+            <button class="btn btn-outline-secondary" type="button" onclick="searchWords()">
+                <i class="bi bi-search"></i>
+            </button>
+        </div>
+
         {% if words %}
-            <ul class="list-group">
+            <div class="row" id="words-container">
                 {% for word in words %}
-                <li class="list-group-item">
-                    Aramaico Siríaco: <strong>{{ word.aramaic_word }}</strong>
-                    <br>
-                    Transliteração: {{ word.transliteration }}
-                    <br>
-                    Tradução: {{ word.portuguese_translation }}
-                </li>
+                <div class="col-12 mb-3">
+                    <div class="card dictionary-card">
+                        <div class="card-body">
+                            <div class="row dictionary-row">
+                                <div class="col-4 dictionary-col border-end">
+                                    <span class="text-muted dictionary-title aramaico-title" style="font-size: 0.8rem;">Aramaico</span>
+                                    <p class="hebrew-font dictionary-text" style="font-size: 1.3em !important;" dir="rtl">{{ word.aramaic_word }}</p>
+                                </div>
+                                <div class="col-4 dictionary-col border-end">
+                                    <span class="text-muted dictionary-title transliteration-title" style="font-size: 0.8rem;">Transliteração</span>
+                                    <p class="dictionary-text" style="font-size: 1rem;">{{ word.transliteration }}</p>
+                                </div>
+                                <div class="col-4 dictionary-col">
+                                    <span class="text-muted dictionary-title translation-title" style="font-size: 0.8rem;">Tradução</span>
+                                    <p class="dictionary-text" style="font-size: 1rem;">{{ word.portuguese_translation }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 {% endfor %}
-            </ul>
+            </div>
+
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% for page_num in page_obj.paginator.page_range %}
+                    <li class="page-item {% if page_obj.number == page_num %}active{% endif %}">
+                        <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                    </li>
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
         {% else %}
             <p>Nenhuma palavra encontrada.</p>
         {% endif %}
     </div>
+    {% endblock %}
+
+    {% block extra_js %}
+    <script>
+        function searchWords() {
+            const input = document.getElementById('search-input');
+            const filter = input.value.toUpperCase();
+            const container = document.getElementById('words-container');
+            const cards = container.querySelectorAll('.dictionary-card');
+            
+            let found = false;
+
+            cards.forEach(card => {
+                const aramaic = card.querySelector('.hebrew-font').textContent.toUpperCase();
+                const transliteration = card.querySelector('.dictionary-text:nth-child(2)').textContent.toUpperCase();
+                const translation = card.querySelector('.dictionary-text:nth-child(3)').textContent.toUpperCase();
+
+                if (aramaic.includes(filter) || transliteration.includes(filter) || translation.includes(filter)) {
+                    card.style.display = "";
+                    found = true;
+                } else {
+                    card.style.display = "none";
+                }
+            });
+            
+            if (!found) {
+                container.innerHTML = '<p>Nenhuma palavra encontrada.</p>';
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                searchWords();
+            }
+        }
+    </script>
     {% endblock %}
